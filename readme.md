@@ -7,8 +7,10 @@ These instructions will get you a copy of the project up and running on your loc
 ### Prerequisites
 This project assumes you are familiar with NodeJS (`9.11.1`) and NPM (`5.6.0`), and have those installed.
 
-### Installing and running
+### Code style
+All JS should conform to the eslint config thats included. Please make sure ESlint is functional in your code editor and the supplied config is being used.
 
+### Installing and running
 Getting the application running is straightforward. First make sure you have installed all modules:
 ```
 npm install
