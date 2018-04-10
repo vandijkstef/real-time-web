@@ -7,6 +7,27 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <section id="app">
+		<section id="new">
+			<form id="register">
+				<label for="name">Who are you?</label>
+				<select name="name" id="name">
+					<% for (var i = 0; i < locals.emoji.length; i++) { %>
+						<option value="<%- locals.emoji[i].key %>"><%- locals.emoji[i].emoji %></option>
+					<% } %>
+				</select>
+				<input type="submit">
+			</form>
+		</section>
+		<section id="chat">
+			<ul>
+				<!-- Let JS fill this -->
+			</ul>
+			<form id="chatmessage">
+				<input type="text" name="message">
+				<input type="submit">
+			</form>
+		</section>
+	</section>
   </body>
 </html>

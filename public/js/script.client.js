@@ -1,3 +1,23 @@
+const CatchForms = function() {
+	const forms = document.querySelectorAll('form');
+	forms.forEach((form) => {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+			switch (e.target.id) {
+			case 'register':
+				console.log('registering new user');
+				break;
+			case 'chatmessage':
+				console.log('Sending chat message');
+				break;
+			default:
+				console.warn('Form not implemented');
+				break;
+			}
+		});
+	});
+};
+
 const Socket = function() {
 	if ('WebSocket' in window) {
 		console.log('Starting Client Websocket');
@@ -19,5 +39,6 @@ const SocketMessages = {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+	CatchForms();
 	Socket();
 });
