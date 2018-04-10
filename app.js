@@ -1,18 +1,45 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-var sassMiddleware = require('node-sass-middleware');
+const createError = require('http-errors');
+const express = require('express');
+const session = require('express-session');
+const FileStore = require('session-file-store')(session);
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const sassMiddleware = require('node-sass-middleware');
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// Setup websocket
+const ws = require('ws').Server;
+const wss = new ws({port: 30005});
+wss.on('connection', (ws, req) => {
+	// Fetch connection session ID
+	const value = '; ' + req.headers.cookie;
+	const parts = value.split('; ' + 'connect.sid' + '=');
+	const sessionID = parts.pop().split(';').shift();
+	console.log('here', sessionID);
+	ws.on('message', (message) => {
+		console.log('received', message);
+		if (message === 'HI') {
+			ws.send('Hello client');
+		}
+	});
+});
 
-var app = express();
+// Setup Express App
+const indexRouter = require('./routes/index');
+
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// Add session support
+app.use(session({
+	secret: 'ufph93nc',
+	store: new FileStore(),
+	saveUninitialized: true,
+	resave: false
+}));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -27,7 +54,6 @@ app.use(sassMiddleware({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
