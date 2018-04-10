@@ -12,11 +12,14 @@
 			<form id="register">
 				<label for="name">Who are you?</label>
 				<select name="name" id="name">
+					<optgroup>
 					<% for (var i = 0; i < locals.emoji.length; i++) { %>
 						<option value="<%- locals.emoji[i].key %>"><%- locals.emoji[i].emoji %></option>
 					<% } %>
+				</optgroup>
 				</select>
-				<input type="submit">
+				<button>Random</button>
+				<input type="submit" value="Save">
 			</form>
 		</section>
 		<section id="chat">
@@ -30,6 +33,7 @@
 		</section>
 		<section id="meta">
 			<p class="users">There is currently <span class="amount">0</span> users online</p>
+			<p class="offline hidden">Server is offline, wait for a bit or try again later</p>
 		</section>
 	</section>
   </body>
