@@ -9,21 +9,20 @@ This project assumes you are familiar with NodeJS (`9.11.1`) and NPM (`5.6.0`), 
 
 ### Installing and running
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
+Getting the application running is straightforward. First make sure you have installed all modules:
 ```
-Give the example
+npm install
 ```
 
-And repeat
-
+Afterwards you can start the app by using:
 ```
-until finished
+npm start
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+Additionally, you can watch the project by using, assuming you have nodemon (`1.12.1`) installed:
+```
+npm run watch
+```
 
 <!-- ## Running the tests
 
