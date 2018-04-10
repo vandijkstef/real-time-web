@@ -45,3 +45,8 @@ This project is copyleft, all wrongs reversed. Have fun!
 
 ## Acknowledgments
 * Huge shoutout to the Coffee Bar on the HvA
+
+---
+
+* Do something on connection close? Try to rebuild the connection?
+* Save to session method
