@@ -5,7 +5,7 @@ Chat application to understand the working of websockets.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
 ### Prerequisites
-This project assumes you are familiar with NodeJS (`9.11.1`) and NPM (`5.6.0`), and have those installed.
+This project assumes you are familiar with NodeJS (`9.11.1`) and NPM (`5.6.0`), and have those installed. Client side you would need a browser that supports `JS ES6 Modules` and `WebSocket`.
 
 ### Code style
 All JS should conform to the eslint config thats included. Please make sure ESlint is functional in your code editor and the supplied config is being used.
@@ -27,10 +27,12 @@ npm run watch
 ```
 
 ## Deployment
-Currently, I have no clue what will happen when I'm deploying this. We'll find out
+Currently, I have no clue what will happen when I'm deploying this. We'll find out...
 
 ## Built With
 * [Express-Generator](https://www.npmjs.com/package/express-generator) - Express base
+* [Node WS](https://github.com/websockets/ws) - Socket.io is build on this
+* [WebSocket](https://html.spec.whatwg.org/multipage/web-sockets.html) - Yes, the native one
 
 ## Contributing
 Currently, no contributions are accepted. However, you are free to fork the project and build on it.

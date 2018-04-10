@@ -11,6 +11,19 @@ const fs = require('fs');
 // Setup websocket
 const ws = require('ws').Server;
 const wss = new ws({port: 30005});
+
+const wsData = { // Yes, this will be cleared on restart
+	clients: {}
+};
+
+const WSbroadcast = (data, ws, wss) => {
+	wss.clients.forEach(function each(client) {
+		if (client !== ws && client.readyState === ws.OPEN) {
+			client.send(data);
+		}
+	});
+};
+
 wss.on('connection', (ws, req) => {
 	// Fetch session
 	const value = '; ' + req.headers.cookie;
@@ -20,18 +33,35 @@ wss.on('connection', (ws, req) => {
 	const session = JSON.parse(fs.readFileSync(sessionsFile, {
 		encoding: 'utf8'
 	}));
-
+	if (wsData.clients[sessionID] === undefined) {
+		wsData.clients[sessionID] = {
+			id: sessionID
+		};
+	}
 	// Edit the session
 	session.touchedByWS = true;
-
+	
 	// Write the session back - Note, this is a sync operation
 	fs.writeFileSync(sessionsFile, JSON.stringify(session));
-
+	
+	// Within this message, we probably know jack-shit about the actual user that has been sending this message.
+	// Or is this actuall kept?
 	ws.on('message', (message) => {
+		// Tell the terminal we got a message
 		console.log('received', message);
 		if (message === 'HI') {
-			ws.send('Hello client');
+			// Say hello to the client, be nice
+			ws.send('Hello client: ' + sessionID);
+			// Also, give the client the data
+			ws.send(JSON.stringify(wsData));
+			// And broadcast that global data to all clients
+			WSbroadcast(JSON.stringify(wsData), ws, wss);
 		}
+	});
+
+	ws.on('close', () => {
+		console.log('Disconnected: ' + sessionID);
+		// TODO: Remove key from active client list
 	});
 });
 
