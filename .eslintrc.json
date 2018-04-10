@@ -30,6 +30,7 @@
 			"error",
 			"global"
 		],
-		"sourceType": "module"
+		"sourceType": "module",
+		"no-var": "error"
     }
 }
