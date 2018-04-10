@@ -6,16 +6,27 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
+const fs = require('fs');
 
 // Setup websocket
 const ws = require('ws').Server;
 const wss = new ws({port: 30005});
 wss.on('connection', (ws, req) => {
-	// Fetch connection session ID
+	// Fetch session
 	const value = '; ' + req.headers.cookie;
 	const parts = value.split('; ' + 'connect.sid' + '=');
-	const sessionID = parts.pop().split(';').shift();
-	console.log('here', sessionID);
+	const sessionID = parts.pop().split(';').shift().replace('s%3A', '').split('.').shift();
+	const sessionsFile = './sessions/' + sessionID + '.json';
+	const session = JSON.parse(fs.readFileSync(sessionsFile, {
+		encoding: 'utf8'
+	}));
+
+	// Edit the session
+	session.touchedByWS = true;
+
+	// Write the session back - Note, this is a sync operation
+	fs.writeFileSync(sessionsFile, JSON.stringify(session));
+
 	ws.on('message', (message) => {
 		console.log('received', message);
 		if (message === 'HI') {
