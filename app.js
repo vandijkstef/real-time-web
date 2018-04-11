@@ -100,7 +100,8 @@ wss.on('connection', (ws, req) => {
 
 	ws.on('close', () => {
 		console.log('Disconnected: ' + sessionID);
-		// TODO: Remove key from active client list
+		delete wsData.clients[sessionID];
+		WSbroadcast(JSON.stringify(wsData), ws, wss);
 	});
 });
 
