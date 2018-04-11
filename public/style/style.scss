@@ -18,3 +18,12 @@ select {
 .hidden {
 	display: none;
 }
+
+#chat {
+	ul {
+		list-style: none;
+		padding: 0;
+		height: 6em;
+		overflow-y: scroll;
+	}
+}

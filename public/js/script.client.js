@@ -7,12 +7,12 @@ const CatchForms = () => {
 			e.preventDefault();
 			switch (e.target.id) {
 			case 'register':
-				console.log('registering new user');
+				console.log('Registering user avatar');
 				ws.send(SocketMessages.register(e.target));
 				break;
 			case 'chatmessage':
 				console.log('Sending chat message');
-				ws.send(SocketMessages.hi());
+				ws.send(SocketMessages.message(document.querySelector('input[name=message]').value));
 				break;
 			default:
 				console.warn('Form not implemented');
@@ -47,11 +47,24 @@ const Socket = () => {
 		};
 		ws.onmessage = (e) => {
 			try {
-				// If this doesn't fail, we most likely received wsData from the server - Test all data and see what we need to update
-				const wsData = JSON.parse(e.data);
-				UpdateFront(wsData);
+				const data = JSON.parse(e.data);
+				if (data.msg) {
+					ReceiveChatMessage(data);
+				} else {
+					UpdateFront(data);
+				}
 			} catch(err) {
-				console.log(e.data);
+				const action = e.data.split(':')[0];
+				const param = e.data.split(':')[1];
+				switch (action) {
+				case 'registered':
+					EnableChat(param);
+					break;
+				
+				default:
+					console.log(e.data);
+					break;
+				}
 			}
 		};
 		ws.onclose = () => {
@@ -69,9 +82,11 @@ const SocketMessages = {
 		return 'HI';
 	},
 	register: (element) => {
-		console.log(element);
 		const value = element.querySelector('select[name=name]').value;
 		return `REGISTER;ELEMENT:${value};`;
+	},
+	message: (msg) => {
+		return `MESSAGE;CHAT:${msg};`;
 	}
 };
 
@@ -88,7 +103,6 @@ const InitUI = () => {
 	elements.chat.classList.add('hidden');
 };
 const UpdateFront = (wsData) => {
-	console.log(wsData);
 	if (wsData.clients) {
 		if (!elements.userAmount) {
 			elements.userAmount = document.querySelector('.users .amount');
@@ -114,6 +128,27 @@ const UIOffline = () => {
 	setTimeout(() => {
 		Socket();
 	}, 10000);
+};
+const EnableChat = (avatar) => {
+	console.log(avatar); // TODO:
+	elements.new.classList.add('hidden');
+	elements.chat.classList.remove('hidden');
+};
+const ReceiveChatMessage = (msgData) => {
+	if (!elements.chatInput) {
+		elements.chatInput = document.querySelector('input[name=message]');
+	}
+	if (!elements.chatUl) {
+		elements.chatUl = document.querySelector('#chat ul');
+	}
+	const chatLi = document.createElement('li');
+	chatLi.innerText = msgData.msg;
+	if (msgData.yours) {
+		elements.chatInput.value = '';
+		chatLi.classList.add('yours');
+	}
+	elements.chatUl.appendChild(chatLi);
+	elements.chatUl.scrollTop = elements.chatUl.scrollHeight;
 };
 
 document.addEventListener('DOMContentLoaded', () => {

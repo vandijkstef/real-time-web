@@ -6,7 +6,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
-const fs = require('fs');
+// const fs = require('fs');
 const emoji = require('node-emoji');
 
 // Setup websocket
@@ -37,13 +37,25 @@ const Register = (message, sessionID, ws, wss) => {
 	// TODO: Store the avater to the session, this will probably be our only interaction with the session
 };
 
+const HandleChatMessage = (message, sessionID, ws, wss) => {
+	const theMsg = message.split(';')[1].split(':')[1];
+	const msg = {
+		user: sessionID,
+		msg: theMsg
+	};
+	WSbroadcast(JSON.stringify(msg), ws, wss);
+	msg.yours = true;
+	ws.send(JSON.stringify(msg));
+};
+
 wss.on('connection', (ws, req) => {
 	// Fetch session
 	const value = '; ' + req.headers.cookie;
 	const parts = value.split('; ' + 'connect.sid' + '=');
 	const sessionID = parts.pop().split(';').shift().replace('s%3A', '').split('.').shift();
-	const sessionsFile = './sessions/' + sessionID + '.json';
-	const session = JSON.parse(fs.readFileSync(sessionsFile, {encoding: 'utf8'}));
+	
+	// const sessionsFile = './sessions/' + sessionID + '.json';
+	// const session = JSON.parse(fs.readFileSync(sessionsFile, {encoding: 'utf8'}));
 
 	// Add to memstore
 	if (wsData.clients[sessionID] === undefined) {
@@ -52,10 +64,10 @@ wss.on('connection', (ws, req) => {
 		};
 	}
 	// Edit the session
-	session.touchedByWS = true;
+	// session.touchedByWS = true;
 	
 	// Write the session back - Note, this is a sync operation
-	fs.writeFileSync(sessionsFile, JSON.stringify(session));
+	// fs.writeFileSync(sessionsFile, JSON.stringify(session));
 	
 	// Within this message, we probably know jack-shit about the actual user that has been sending this message.
 	// Or is this actuall kept? -> it is!
@@ -75,6 +87,9 @@ wss.on('connection', (ws, req) => {
 			break;
 		case 'REGISTER':
 			Register(message, sessionID, ws, wss);
+			break;
+		case 'MESSAGE':
+			HandleChatMessage(message, sessionID, ws, wss);
 			break;
 		default:
 			ws.send('Not implemented: ' + sessionID);
