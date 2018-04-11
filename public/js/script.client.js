@@ -135,6 +135,7 @@ const EnableChat = (avatar) => {
 	elements.chat.classList.remove('hidden');
 };
 const ReceiveChatMessage = (msgData) => {
+	console.log(msgData);
 	if (!elements.chatInput) {
 		elements.chatInput = document.querySelector('input[name=message]');
 	}
@@ -142,7 +143,7 @@ const ReceiveChatMessage = (msgData) => {
 		elements.chatUl = document.querySelector('#chat ul');
 	}
 	const chatLi = document.createElement('li');
-	chatLi.innerText = msgData.msg;
+	chatLi.innerText = msgData.user.emoji+msgData.msg;
 	if (msgData.yours) {
 		elements.chatInput.value = '';
 		chatLi.classList.add('yours');
