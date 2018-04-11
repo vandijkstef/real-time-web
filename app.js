@@ -38,6 +38,7 @@ const Register = (message, sessionID, ws, wss) => {
 };
 
 const HandleChatMessage = (message, sessionID, ws, wss) => {
+	// TODO: Add full client data, or at least avatar
 	const theMsg = message.split(';')[1].split(':')[1];
 	const msg = {
 		user: sessionID,
