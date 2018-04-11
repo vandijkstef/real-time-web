@@ -1,5 +1,7 @@
 let ws;
 
+/// FORMS ///
+// Catch all form submissions and hook up the actions needed
 const CatchForms = () => {
 	const forms = document.querySelectorAll('form');
 	forms.forEach((form) => {
@@ -22,6 +24,8 @@ const CatchForms = () => {
 	});
 };
 
+/// BUTTONS ///
+// Set all non-submit buttons
 const SetButtons = () => {
 	const buttonRandom = document.querySelector('#register button');
 	if (buttonRandom) {
@@ -38,6 +42,8 @@ const randomizeEmoji = (e) => {
 	}
 };
 
+/// SOCKET ///
+// The socket, the whole socket and nothing but the socket
 const Socket = () => {
 	if ('WebSocket' in window) {
 		console.log('Starting Client Websocket');
@@ -77,6 +83,7 @@ const Socket = () => {
 	}
 };
 
+// Standardize socket messages
 const SocketMessages = {
 	hi: () => {
 		return 'HI';
@@ -90,10 +97,18 @@ const SocketMessages = {
 	}
 };
 
+/// UI ///
+// Memstore elements
 const elements = {};
+
+// Initialize UI
 const InitUI = () => {
 	CatchForms();
 	SetButtons();
+	const avatar = {
+		avatar: document.querySelector('input[name=avatar]'),
+		emoji: document.querySelector('input[name=emoji]'),
+	};
 	if (!elements.new) {
 		elements.new = document.querySelector('#new');
 	}
@@ -101,7 +116,13 @@ const InitUI = () => {
 		elements.chat = document.querySelector('#chat');
 	}
 	elements.chat.classList.add('hidden');
+
+	if (avatar.avatar && avatar.emoji) {
+		EnableChat(avatar); // TODO: Fetch avatar from hidden fields
+	}
 };
+
+// Update front using wsData from server
 const UpdateFront = (wsData) => {
 	if (wsData.clients) {
 		if (!elements.userAmount) {
@@ -117,6 +138,8 @@ const UpdateFront = (wsData) => {
 		}
 	}
 };
+
+// Set UI to offline, try to reconnect
 const UIOffline = () => {
 	if (!elements.offline) {
 		elements.offline = document.querySelector('section#meta .offline');
@@ -127,13 +150,17 @@ const UIOffline = () => {
 	elements.offline.classList.remove('hidden');
 	setTimeout(() => {
 		Socket();
-	}, 10000);
+	}, 5000);
 };
+
+// Hide the new window and show the chat
 const EnableChat = (avatar) => {
 	console.log(avatar); // TODO:
 	elements.new.classList.add('hidden');
 	elements.chat.classList.remove('hidden');
 };
+
+// Handle an incoming chat message
 const ReceiveChatMessage = (msgData) => {
 	console.log(msgData);
 	if (!elements.chatInput) {
