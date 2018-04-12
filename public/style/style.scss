@@ -1,6 +1,6 @@
 body {
 	padding: 50px;
-	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	font-family: sans-serif;
 }
 
 a {
@@ -9,10 +9,6 @@ a {
 
 select {
 	font-size: 3em;
-	// line-height: 6em;
-	// option {
-	// 	margin-bottom: .4em;
-	// }
 }
 
 .hidden {
@@ -23,7 +19,38 @@ select {
 	ul {
 		list-style: none;
 		padding: 0;
-		height: 6em;
+		height: 12em;
 		overflow-y: scroll;
+		background-color: #EEE;
+		li {
+			font-size: 1.4em;
+			padding: .5em 0;
+			border-top: 1px solid #DDD;
+			display: flex;
+			align-items: baseline;
+			.avatar {
+				font-size: 1.2em;
+				&::after {
+					content: ':';
+					padding: 0 .3em;
+				}
+			}
+			// .plaintext {
+			// 	// margin: 0 .5em;
+			// }
+			&.yours {
+				justify-content: flex-end;
+				.avatar {
+					order: 2;
+					&::after {
+						content: '';
+					}
+					&::before {
+						content: ':';
+						padding: 0 .3em;
+					}
+				}
+			}
+		}
 	}
 }

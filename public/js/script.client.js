@@ -136,6 +136,9 @@ const UpdateFront = (wsData) => {
 		if (!elements.userAmount) {
 			elements.userAmount = document.querySelector('.users .amount');
 		}
+		if (!elements.isare) {
+			elements.isare = document.querySelector('.isare');
+		}
 		const clients = Object.keys(wsData.clients).length;
 		elements.userAmount.classList.remove('hidden');
 		if (elements.offline) {
@@ -143,6 +146,11 @@ const UpdateFront = (wsData) => {
 		}
 		if (elements.userAmount.innerText !== clients.toString()) {
 			elements.userAmount.innerText = clients;
+			if (clients === 1) {
+				elements.isare.innerText = 'is';
+			} else {
+				elements.isare.innerText = 'are';
+			}
 		}
 	}
 };
@@ -178,7 +186,24 @@ const ReceiveChatMessage = (msgData) => {
 		elements.chatUl = document.querySelector('#chat ul');
 	}
 	const chatLi = document.createElement('li');
-	chatLi.innerText = msgData.user.emoji+msgData.msg;
+
+	const avatar = document.createElement('span');
+	avatar.classList.add('avatar');
+	avatar.innerText = msgData.user.emoji;
+	chatLi.appendChild(avatar);
+
+	// const msgText = document.createElement('span');
+	// msgText.classList.add('message');
+	// msgText.classList.add('plaintext');
+	// msgText.innerText = msgData.msg;
+	// chatLi.appendChild(msgText);
+
+	const msgEmoji = document.createElement('span');
+	msgEmoji.classList.add('message');
+	msgEmoji.classList.add('emojitext');
+	msgEmoji.innerText = msgData.emojified;
+	chatLi.appendChild(msgEmoji);
+
 	if (msgData.yours) {
 		elements.chatInput.value = '';
 		chatLi.classList.add('yours');

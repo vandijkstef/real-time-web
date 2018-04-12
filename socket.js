@@ -28,9 +28,8 @@ const Setup = (server) => {
 		
 		ws.on('message', (message) => {
 			// Tell the terminal we got a message
-			console.log('received', message);
 			const action = message.split(';')[0];
-			console.log(action);
+			console.log('received', message, action, sessionID);
 			switch (action) {
 			case 'HI':
 				// Say hello to the client, be nice
@@ -58,7 +57,7 @@ const Setup = (server) => {
 			WSbroadcast(JSON.stringify(wsData), ws, wss);
 		});
 	});
-}
+};
 const wsData = { // Yes, this will be cleared on restart
 	clients: {}
 };
@@ -108,8 +107,45 @@ const HandleChatMessage = (message, sessionID, ws, wss) => {
 
 const Emojify = (msg) => {
 	// Split message into words
-	msg = msg.split(' ');
-	console.log(msg);
+	const returnMsg = [];
+	let returnStr = '';
+	let message = msg.replace('!', ' !');
+	message = message.replace('?', ' ?');
+	message = message.replace(',', ' ,');
+	message = message.replace('.', ' .');
+	let words = message.split(' ');
+	words.forEach((word) => {
+		if (word.length >= 2) {
+			let searchWord = word.toLowerCase();
+			let eWord = emoji.search(searchWord);
+			if (eWord[0] && eWord[0].emoji) {
+				let emoji;
+				// Test for a 1:1 match
+				eWord.forEach((word) => {
+					if (word.key === searchWord) {
+						emoji = word.emoji;
+					}
+				});
+				if (!emoji) {
+					// If its still empty, use one of the available options
+					emoji = eWord[Math.floor(Math.random() * eWord.length)].emoji;
+				}
+				returnMsg.push(emoji);
+			} else {
+				returnMsg.push(word);
+			}
+		} else {
+			returnMsg.push(word);
+		}
+	});
+	returnMsg.forEach((part) => {
+		returnStr += part + ' ';
+	});
+	returnStr = returnStr.replace(' !', '!');
+	returnStr = returnStr.replace(' ?', '?');
+	returnStr = returnStr.replace(' ,', ',');
+	returnStr = returnStr.replace(' .', '.');
+	return returnStr;
 };
 
 module.exports = Setup;
