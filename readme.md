@@ -26,6 +26,10 @@ Additionally, you can watch the project by using, assuming you have nodemon (`1.
 npm run watch
 ```
 
+## Todo/proposal
+* Chatrooms
+* Private messaging
+
 ## Deployment
 Currently, I have no clue what will happen when I'm deploying this. We'll find out...
 
@@ -38,7 +42,24 @@ Currently, I have no clue what will happen when I'm deploying this. We'll find o
 Currently, no contributions are accepted. However, you are free to fork the project and build on it.
 
 ## Authors
-* **Stef van Dijk** - *Initial work* - [vandijktef](https://github.com/vandijkstef)
+* **Stef van Dijk** - *Initial work* - [vandijktef](https://github.com/vandijkstef
+
+## Features
+* Select nation flag
+* Chat
+* Native WS
+
+## Dependencies
+* Cookieparser
+* WS 
+* EJS
+* Express
+* Express-Session
+* Http-errors
+* Morgan
+* Node-emoji
+* Node-sass-Middleware
+* Session-file-store
 
 ## License
 This project is copyleft, all wrongs reversed. Have fun!
