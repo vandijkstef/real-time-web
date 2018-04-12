@@ -7,9 +7,6 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sassMiddleware = require('node-sass-middleware');
 
-// Socket!
-require('./socket.js');
-
 // Setup Express App
 const indexRouter = require('./routes/index');
 

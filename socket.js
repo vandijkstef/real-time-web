@@ -2,8 +2,57 @@ const fs = require('fs');
 const emoji = require('node-emoji');
 
 const ws = require('ws').Server;
-const wss = new ws({port: process.env.PORT || 30005});
-
+// const wss = new ws({port: process.env.PORT || 30005});
+const Setup = (server) => {
+	const wss = new ws({server});
+	wss.on('connection', (ws, req) => {
+		// Fetch sessionID
+		const value = '; ' + req.headers.cookie;
+		const parts = value.split('; ' + 'connect.sid' + '=');
+		const sessionID = parts.pop().split(';').shift().replace('s%3A', '').split('.').shift();
+	
+		if (wsData.clients[sessionID] === undefined) {
+			// Add to memstore
+			wsData.clients[sessionID] = {
+				id: sessionID
+			};
+		} else {
+			// TODO: try to fetch avatar here
+		}
+		
+		ws.on('message', (message) => {
+			// Tell the terminal we got a message
+			console.log('received', message);
+			const action = message.split(';')[0];
+			console.log(action);
+			switch (action) {
+			case 'HI':
+				// Say hello to the client, be nice
+				ws.send('Hello client: ' + sessionID);
+				// Also, give the client the data
+				ws.send(JSON.stringify(wsData));
+				// And broadcast that global data to all clients
+				WSbroadcast(JSON.stringify(wsData), ws, wss);
+				break;
+			case 'REGISTER':
+				Register(message, sessionID, ws, wss);
+				break;
+			case 'MESSAGE':
+				HandleChatMessage(message, sessionID, ws, wss);
+				break;
+			default:
+				ws.send('Not implemented: ' + sessionID);
+				break;
+			}
+		});
+	
+		ws.on('close', () => {
+			console.log('Disconnected: ' + sessionID);
+			delete wsData.clients[sessionID];
+			WSbroadcast(JSON.stringify(wsData), ws, wss);
+		});
+	});
+}
 const wsData = { // Yes, this will be cleared on restart
 	clients: {}
 };
@@ -60,52 +109,4 @@ const Emojify = (msg) => {
 	console.log(msg);
 };
 
-wss.on('connection', (ws, req) => {
-	// Fetch sessionID
-	const value = '; ' + req.headers.cookie;
-	const parts = value.split('; ' + 'connect.sid' + '=');
-	const sessionID = parts.pop().split(';').shift().replace('s%3A', '').split('.').shift();
-
-	if (wsData.clients[sessionID] === undefined) {
-		// Add to memstore
-		wsData.clients[sessionID] = {
-			id: sessionID
-		};
-	} else {
-		// TODO: try to fetch avatar here
-	}
-	
-	ws.on('message', (message) => {
-		// Tell the terminal we got a message
-		console.log('received', message);
-		const action = message.split(';')[0];
-		console.log(action);
-		switch (action) {
-		case 'HI':
-			// Say hello to the client, be nice
-			ws.send('Hello client: ' + sessionID);
-			// Also, give the client the data
-			ws.send(JSON.stringify(wsData));
-			// And broadcast that global data to all clients
-			WSbroadcast(JSON.stringify(wsData), ws, wss);
-			break;
-		case 'REGISTER':
-			Register(message, sessionID, ws, wss);
-			break;
-		case 'MESSAGE':
-			HandleChatMessage(message, sessionID, ws, wss);
-			break;
-		default:
-			ws.send('Not implemented: ' + sessionID);
-			break;
-		}
-	});
-
-	ws.on('close', () => {
-		console.log('Disconnected: ' + sessionID);
-		delete wsData.clients[sessionID];
-		WSbroadcast(JSON.stringify(wsData), ws, wss);
-	});
-});
-
-module.exports = wss;
+module.exports = Setup;

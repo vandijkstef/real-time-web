@@ -47,11 +47,11 @@ const randomizeEmoji = (e) => {
 const Socket = () => {
 	if ('WebSocket' in window) {
 		console.log('Starting Client Websocket');
-		let host = location.origin.replace(/^http/, 'ws')
+		let host = location.origin.replace(/^http/, 'ws');
 		// ws = new WebSocket('ws://' + window.location.hostname + ':30005');
-		if (location.hostname === 'localhost') {
-			host = host + '5';
-		}
+		// if (location.hostname === 'localhost') {
+		// 	host = host + '5';
+		// }
 		ws = new WebSocket(host);
 		ws.onopen = () => {
 			ws.send(SocketMessages.hi());
