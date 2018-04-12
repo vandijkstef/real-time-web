@@ -14,19 +14,18 @@ const Setup = (server) => {
 		if (wsData.clients[sessionID] === undefined) {
 			// Fetch session file
 			let session;
-			try {
-				const sessionsFile = './sessions/' + sessionID + '.json';
+			const sessionsFile = './sessions/' + sessionID + '.json';
+			if (fs.existsSync(sessionsFile)) {
 				session = JSON.parse(fs.readFileSync(sessionsFile, {encoding: 'utf8'}));
-			} finally {
-				// Add to memstore
-				wsData.clients[sessionID] = {
-					id: sessionID
-				};
-				// Add avatar data, if available
-				if (session && session.avatar) {
-					wsData.clients[sessionID].avatar = session.avatar.avatar;
-					wsData.clients[sessionID].emoji = session.avatar.emoji;
-				}
+			}
+			// Add to memstore
+			wsData.clients[sessionID] = {
+				id: sessionID
+			};
+			// Add avatar data, if available
+			if (session && session.avatar) {
+				wsData.clients[sessionID].avatar = session.avatar.avatar;
+				wsData.clients[sessionID].emoji = session.avatar.emoji;
 			}
 		}
 		
