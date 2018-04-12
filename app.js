@@ -10,7 +10,6 @@ const sassMiddleware = require('node-sass-middleware');
 // Socket!
 require('./socket.js');
 
-
 // Setup Express App
 const indexRouter = require('./routes/index');
 

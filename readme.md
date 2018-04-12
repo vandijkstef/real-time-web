@@ -42,7 +42,7 @@ Currently, I have no clue what will happen when I'm deploying this. We'll find o
 Currently, no contributions are accepted. However, you are free to fork the project and build on it.
 
 ## Authors
-* **Stef van Dijk** - *Initial work* - [vandijktef](https://github.com/vandijkstef
+* **Stef van Dijk** - *Initial work* - [vandijkstef](https://github.com/vandijkstef)
 
 ## Features
 * Select nation flag
