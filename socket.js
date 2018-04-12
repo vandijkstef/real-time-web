@@ -2,7 +2,7 @@ const fs = require('fs');
 const emoji = require('node-emoji');
 
 const ws = require('ws').Server;
-// const wss = new ws({port: process.env.PORT || 30005});
+
 const Setup = (server) => {
 	const wss = new ws({server});
 	wss.on('connection', (ws, req) => {
@@ -12,12 +12,18 @@ const Setup = (server) => {
 		const sessionID = parts.pop().split(';').shift().replace('s%3A', '').split('.').shift();
 	
 		if (wsData.clients[sessionID] === undefined) {
+			// Fetch session file
+			const sessionsFile = './sessions/' + sessionID + '.json';
+			const session = JSON.parse(fs.readFileSync(sessionsFile, {encoding: 'utf8'}));
 			// Add to memstore
 			wsData.clients[sessionID] = {
 				id: sessionID
 			};
-		} else {
-			// TODO: try to fetch avatar here
+			// Add avatar data, if available
+			if (session && session.avatar) {
+				wsData.clients[sessionID].avatar = session.avatar.avatar;
+				wsData.clients[sessionID].emoji = session.avatar.emoji;
+			}
 		}
 		
 		ws.on('message', (message) => {
@@ -28,7 +34,7 @@ const Setup = (server) => {
 			switch (action) {
 			case 'HI':
 				// Say hello to the client, be nice
-				ws.send('Hello client: ' + sessionID);
+				ws.send('Hello client: ' + JSON.stringify(wsData.clients[sessionID]));
 				// Also, give the client the data
 				ws.send(JSON.stringify(wsData));
 				// And broadcast that global data to all clients
@@ -72,7 +78,7 @@ const Register = (message, sessionID, ws, wss) => {
 	avatar.emoji = emoji.find(avatar.avatar).emoji;
 	wsData.clients[sessionID].avatar = avatar.avatar;
 	wsData.clients[sessionID].emoji = avatar.emoji;
-	ws.send('registered:' + avatar);
+	ws.send('registered:' + avatar.emoji);
 	// Also, give the client the data
 	ws.send(JSON.stringify(wsData));
 	// And broadcast that global data to all clients
@@ -82,10 +88,7 @@ const Register = (message, sessionID, ws, wss) => {
 	const sessionsFile = './sessions/' + sessionID + '.json';
 	const session = JSON.parse(fs.readFileSync(sessionsFile, {encoding: 'utf8'}));
 	// Place avatar in session
-	session.avatar = {
-		avatar: avatar,
-		emoji: emoji
-	};
+	session.avatar = avatar;
 	// Store the session
 	fs.writeFileSync(sessionsFile, JSON.stringify(session));
 };

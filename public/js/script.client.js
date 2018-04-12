@@ -110,10 +110,13 @@ const elements = {};
 const InitUI = () => {
 	CatchForms();
 	SetButtons();
-	const avatar = {
-		avatar: document.querySelector('input[name=avatar]'),
-		emoji: document.querySelector('input[name=emoji]'),
-	};
+	let avatar;
+	if (document.querySelector('input[name=avatar]')) {
+		avatar = {
+			avatar: document.querySelector('input[name=avatar]').value,
+			emoji: document.querySelector('input[name=emoji]').value,
+		};
+	}
 	if (!elements.new) {
 		elements.new = document.querySelector('#new');
 	}
@@ -122,8 +125,8 @@ const InitUI = () => {
 	}
 	elements.chat.classList.add('hidden');
 
-	if (avatar.avatar && avatar.emoji) {
-		EnableChat(avatar); // TODO: Fetch avatar from hidden fields
+	if (avatar && avatar.avatar && avatar.emoji) {
+		EnableChat(avatar.emoji);
 	}
 };
 
@@ -159,8 +162,8 @@ const UIOffline = () => {
 };
 
 // Hide the new window and show the chat
-const EnableChat = (avatar) => {
-	console.log(avatar); // TODO:
+const EnableChat = (emoji) => {
+	document.querySelector('#userAvatar').innerText = emoji;
 	elements.new.classList.add('hidden');
 	elements.chat.classList.remove('hidden');
 };
