@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.0/socket.io.js"></script>
+
+	
+	<style>
+		html, body{
+			width: 100%;
+			height: 100%;
+			padding:0;
+			margin:0;
+			font-family: Arial, sans-serif;
+		}
+
+		div#text{
+			width: 100%;
+			height: 100%;
+			resize: none;
+			background: #cfcfcf;
+		}
+
+	</style>
+
+</head>
+<body>
+	
+	<div id="text"></div>
+
+	<script>
+		const div = document.getElementById("text");
+		div.onclick = function() {
+			window.onkeydown = function(e) {
+				console.log(e)
+				if(e.keyCode != 13) {
+					div.innerHTML += e.key;
+				}else if(e.key === "Enter"){
+					div.innerText += '\/n';
+				}
+			}
+		}
+	</script>
+	
+</body>
+</html>
