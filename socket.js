@@ -2,7 +2,7 @@ const fs = require('fs');
 const emoji = require('node-emoji');
 
 const ws = require('ws').Server;
-const wss = new ws({port: 30005});
+const wss = new ws({port: process.env.PORT || 30005});
 
 const wsData = { // Yes, this will be cleared on restart
 	clients: {}
