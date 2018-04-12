@@ -26,16 +26,17 @@ Additionally, you can watch the project by using, assuming you have nodemon (`1.
 npm run watch
 ```
 
-## Todo/proposal
-* Chatrooms
-* Private messaging
-
 ## Deployment
 Currently, I have no clue what will happen when I'm deploying this. We'll find out...
 
 ## Built With
+These are the main packages used for this application. Please refer to `package.json` for a complete overview.
+### Server side
 * [Express-Generator](https://www.npmjs.com/package/express-generator) - Express base
 * [Node WS](https://github.com/websockets/ws) - Socket.io is build on this
+* [Express-Session](https://www.npmjs.com/package/express-sessions) - Also fetching the session from WebSocket
+* [Node-Emoji by Omnidan](https://github.com/omnidan/node-emoji) - Emojis ❤️ 
+### Client side
 * [WebSocket](https://html.spec.whatwg.org/multipage/web-sockets.html) - Yes, the native one
 
 ## Contributing
@@ -43,31 +44,22 @@ Currently, no contributions are accepted. However, you are free to fork the proj
 
 ## Authors
 * **Stef van Dijk** - *Initial work* - [vandijkstef](https://github.com/vandijkstef)
+* **Zekkie** - *Readme suggestions* - [Zekkie](https://github.com/zekkie)
 
 ## Features
-* Select nation flag
 * Chat
+* Select emoji-avatar
 * Native WS
 
-## Dependencies
-* Cookieparser
-* WS 
-* EJS
-* Express
-* Express-Session
-* Http-errors
-* Morgan
-* Node-emoji
-* Node-sass-Middleware
-* Session-file-store
-
 ## License
-This project is copyleft, all wrongs reversed. Have fun!
+This project is copyleft, all wrongs reversed. Have fun! *Note: This might not be true for dependencies*
 
 ## Acknowledgments
-* Huge shoutout to the Coffee Bar on the HvA
+* Huge shoutout to the Coffee Bar on the HvA ☕️
 
 ---
 
-* Do something on connection close? Try to rebuild the connection?
+## Todo/proposal
+* Chatrooms
+* Private messaging
 * Save to session method
