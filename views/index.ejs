@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>EmojiChat</title>
 	<link rel="stylesheet" href="/style/style.css" />
 	<script src="/js/script.client.js" type="module" crossorigin></script>
   </head>
   <body>
-    <h1><%= title %></h1>
+	<h1>EmojiChat</h1>
+	<p>Just a regular chat based on WebSockets, emojified</p>
     <section id="app">
 		<% if (locals.emoji) { %>
 			<section id="new">
