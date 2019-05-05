@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EmojiChat</title>
+	<link rel="stylesheet" href="/style/style.css" />
+	<script src="/js/script.client.js" type="module" crossorigin></script>
+  </head>
+  <body>
+	<h1>EmojiChat</h1>
+	<p>Just a regular chat based on WebSockets, emojified</p>
+    <section id="app">
+		<% if (locals.emoji) { %>
+			<section id="new">
+				<form id="register">
+					<label for="name">Who are you?</label>
+					<select name="name" id="name">
+						<optgroup>
+						<% for (var i = 0; i < locals.emoji.length; i++) { %>
+							<option value="<%- locals.emoji[i].key %>"><%- locals.emoji[i].emoji %></option>
+						<% } %>
+					</optgroup>
+					</select>
+					<button>Random</button>
+					<input type="submit" value="Save">
+				</form>
+			</section>
+		<% } %>
+		<% if (locals.avatar) { %>
+			<input type="hidden" name="avatar" value="<%- locals.avatar.avatar %>">
+			<input type="hidden" name="emoji" value="<%- locals.avatar.emoji %>">
+		<% } %>
+		<section id="chat">
+			<ul>
+				<!-- Let JS fill this -->
+			</ul>
+			<form id="chatmessage">
+				<span id="userAvatar"></span>
+				<input type="text" name="message">
+				<input type="submit">
+			</form>
+		</section>
+		<section id="meta">
+			<p class="users">There <span class="isare">is</span> currently <span class="amount">0</span> users online</p>
+			<p class="offline hidden">Server is offline, wait for a bit or try again later</p>
+		</section>
+	</section>
+  </body>
+</html>
